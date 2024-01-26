@@ -2,7 +2,7 @@
 
 #include <iostream>
 #include <vector>
-#include "nn/net.cpp"
+#include "simplenn/net.cpp"
 
 int main()
 {

@@ -1,7 +1,7 @@
 #ifndef _NET_
 #define _NET_
 #include <vector>
-#include "neuron.hpp"
+#include "neuron.cpp"
 class Net
 {
 public:
