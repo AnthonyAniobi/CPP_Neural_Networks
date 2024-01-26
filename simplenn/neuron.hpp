@@ -15,10 +15,16 @@ typedef std::vector<Neuron> Layer;
 class Neuron
 {
 public:
-    Neuron(unsigned numOutputs);
+    Neuron(unsigned numOutputs, unsigned index);
+    void setOutputVal(double outputVal);
+    double getOutputVal(void) const;
+    void feedForward(const Layer &prevLayer);
 
 private:
+    static double activationFunction(double x);
+    static double activationFunctionDerivative(double x);
     double m_outputVal;
+    unsigned m_index;
     std::vector<Connection> m_outputWeights;
 };
 
