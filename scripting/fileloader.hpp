@@ -1,5 +1,7 @@
 #ifndef _FileLoader_
 #define _FileLoader_
+#include <iostream>
+#include <iomanip>
 #include <string>
 #include <fstream>
 #include <sstream>
@@ -13,12 +15,17 @@ class FileLoader
 {
 private:
     std::vector<Layer<T>> data;
-    void convertString(const std::stringstream *input, T &ouput) const;
-    // void convertString(const std::stringstream *input, int &ouput) const;
-    // void convertString(const std::stringstream *input, float &ouput) const;
+    std::vector<Layer<std::string>> preview;
+    T convertString(const std::stringstream *input) const;
+    T defaultValue(void) const;
+    long maxRow = 20;
+    long minRow;
 
 public:
-    void loadCSV(const char *path) const;
+    FileLoader(const char *path, FileType fileType = FileType.csv);
+    void print(const int length) const;
+    void head(void) const;
+    std::vector<Layer<T>> loadData(const unsigned long startIndex = 0, const T fillValue = 0);
 };
 
 END_NAMESPACE_SCRIPTING

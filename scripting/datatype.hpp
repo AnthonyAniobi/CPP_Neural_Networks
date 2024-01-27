@@ -15,4 +15,10 @@
 template <typename T>
 using Layer = std::vector<T>;
 
+enum FileType
+{
+    csv,
+    d4,
+};
+
 #endif

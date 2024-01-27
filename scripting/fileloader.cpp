@@ -3,46 +3,82 @@
 BEGIN_NAMESPACE_SCRIPTING
 
 DEF_TEMPLATE(T)
-void FileLoader<T>::loadCSV(const char *path) const
+FileLoader<T>::FileLoader(const char *path, FileType fileType = FileType.csv)
 {
-    // get a csv file and load the data
-    // note this file loader does not have
     std::ifstream csvFile(path);
     char c;
     std::stringstream colStream;
-    Layer<T> row;
+    Layer<std::string> row;
+    long count = 0; // number of chars in each col
     while (csvFile.get(c))
     {
         if (c == ',') // after each column
         {
-            T input;
-            convertString(colStream, input);
-            colStream.clear();
-            row.push_back(input);
+            if (count <= 0)
+            {
+                row.push_back("");
+            }
+            else
+            {
+                std::string input;
+                colStream >> input;
+                colStream.clear();
+                row.push_back(input);
+                count = 0;
+            }
         }
         else if (c == '\n') // at the end of the line
         {
-            if (value.size() > 0)
+            if (count > 0)
             {
-                T input;
-                convertString(colStream, input);
-                value.clear();
+                std::string input;
+                colStream >> input;
+                colStream.clear();
                 row.push_back(input);
+                count = 0;
             }
             data.push_back(row);
             row.clear(); // clear row
         }
         else
         {
-            colStream.put(c); // insert item into stream
+            ++count;
+            colStream << c // insert item into stream
         }
     }
 }
 
 DEF_TEMPLATE(T)
-void FileLoader<T>::convertString(const std::stringstream *input, T &output) const
+std::vector<Layer<T>> FileLoader<T>::loadData(const unsigned long startIndex = 0, const T fillValue = 0)
 {
-    T x;
+    std::vector<Layer<T>> matrix;
+    Layer<T> row;
+    std::stringstream s;
+    for (unsigned long i = startIndex; i < preview.size(); ++i)
+    {
+        for (unsigned long j = 0; j < preview[i].size(); ++j)
+        {
+            s << preview[i][j];
+            row.push_back(convertString(s));
+            s.clear();
+        }
+        matrix.push_back(row);
+        row.clear();
+    }
+}
+
+DEF_TEMPLATE(T)
+T FileLoader<T>::convertString(const std::stringstream *input) const
+{
+    T x = defaultValue();
+    if (input >> x)
+        ;
+    return x;
+}
+
+DEF_TEMPLATE(T)
+T FileLoader<T>::defaultValue(void) const
+{
     if ((T is u_int8_t) || (T is u_int16_t) || (T is u_int32_t) || (T is u_int64_t))
     {
         x = 0;
@@ -57,11 +93,28 @@ void FileLoader<T>::convertString(const std::stringstream *input, T &output) con
     }
     else
     {
-        assert("Template must be a fundamental type");
+        assert(false);
     }
-    if (input >> x)
-        ;
-    output = x;
+}
+
+DEF_TEMPLATE(T)
+void FileLoader<T>::print(const int length) const
+{
+    assert(length < preview.size());
+    std::cout << std::setw(maxRow + 2) << std::left;
+    for (unsigned long i = 0; i < length; ++i)
+    {
+        for (unsigned long j = 0; j < preview[i].length(); ++j)
+        {
+            cout << preview[i][j];
+        }
+        cout << endl;
+    }
+}
+DEF_TEMPLATE(T)
+void FileLoader<T>::head(void) const
+{
+    print(5);
 }
 
 END_NAMESPACE_SCRIPTING
