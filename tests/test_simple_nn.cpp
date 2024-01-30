@@ -1,23 +1,21 @@
 #include <iostream>
-#include <iomanip>
-#include <cmath>
+#include <cstdlib>
+#include "../scripting/fileloader.cpp"
+
 using namespace std;
 
 int main()
 {
-    float x = 0.0;
+    scripting::FileLoader<double> file("xor.csv");
 
-    for (unsigned i = 0; i < 10; ++i)
+    std::vector<Layer(double)> data = file.loadData();
+
+    for (unsigned long i = 0; i < 20; ++i)
     {
-        x += 0.1;
+        for (unsigned long j = 0; j < file.getColumn(); ++j)
+        {
+            cout << data[i][j] << " , ";
+        }
+        cout << endl;
     }
-    if (x == 1.0)
-    {
-        cout << "it is equal to 1.0" << endl;
-    }
-    else
-    {
-        cout << "something went wrong" << endl;
-    }
-    cout << x << endl;
 }
