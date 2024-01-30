@@ -11,9 +11,7 @@
 #define END_NAMESPACE_SCRIPTING }
 
 #define DEF_TEMPLATE(T) template <typename T>
-
-template <typename T>
-using Layer = std::vector<T>;
+#define Layer(T) std::vector<T>
 
 enum FileType
 {
