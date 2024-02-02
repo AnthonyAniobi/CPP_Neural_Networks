@@ -1,6 +1,4 @@
 #include "neuron.hpp"
-#include <cstdlib>
-#include <cmath>
 
 double randomWeights(void);
 
@@ -24,7 +22,7 @@ double Neuron::getOutputVal(void) const
     return m_outputVal;
 }
 
-void Neuron::feedForward(const Layer &prevLayer)
+void Neuron::feedForward(const Layer(Neuron) & prevLayer)
 {
     double sum = 0.0;
     for (unsigned i = 0; i < prevLayer.size(); ++i)
@@ -53,13 +51,13 @@ void Neuron::calculateOutputGradients(double targetValues)
     m_gradient = delta * Neuron::activationFunctionDerivative(m_outputVal);
 }
 
-void Neuron::calculateHiddenGradients(const Layer &prevLayer)
+void Neuron::calculateHiddenGradients(const Layer(Neuron) & prevLayer)
 {
     double dow = sumDOW(prevLayer);
     m_gradient = dow * Neuron::activationFunctionDerivative(m_outputVal);
 }
 
-double Neuron::sumDOW(const Layer &nextLayer) const
+double Neuron::sumDOW(const Layer(Neuron) & nextLayer) const
 {
     double sum = 0.0;
     // sum(w*(loss))
@@ -70,7 +68,7 @@ double Neuron::sumDOW(const Layer &nextLayer) const
     return sum;
 }
 
-void Neuron::updateInputWeights(Layer &prevLayer)
+void Neuron::updateInputWeights(Layer(Neuron) & prevLayer)
 {
     for (unsigned i = 0; i < prevLayer.size(); ++i)
     {

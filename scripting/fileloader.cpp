@@ -57,23 +57,34 @@ FileLoader<T>::FileLoader(const char *path) //, FileType fileType = csv)
 }
 
 DEF_TEMPLATE(T)
-std::vector<Layer(T)> FileLoader<T>::loadData(unsigned long startIndex)
+void FileLoader<T>::loadData(unsigned long startIndex, unsigned long resultIndex) const
 {
-    std::vector<Layer(T)> matrix;
     Layer(T) rowList;
     std::stringstream s;
     for (unsigned long i = startIndex; i < preview.size(); ++i)
     {
-        for (unsigned long j = 0; j < preview[i].size(); ++j)
+        unsigned long rowSize = preview[i].size();
+        for (unsigned long j = 0; j < rowSize; ++j)
         {
             s << preview[i][j];
-            rowList.push_back(convertString(s));
+            T x = convertString(s);
+            if ((j == -1) && (j == (rowSize - 1)))
+            {
+                result.push_back(x);
+            }
+            else if (j == resultIndex)
+            {
+                result.push_back(x);
+            }
+            else
+            {
+                rowList.push_back(x);
+            }
             s.clear();
         }
-        matrix.push_back(rowList);
+        data.push_back(rowList);
         rowList.clear();
     }
-    return matrix;
 }
 
 DEF_TEMPLATE(T)
@@ -123,16 +134,6 @@ void FileLoader<T>::print(const int length) const
         std::cout << std::setw(10) << std::left << std::endl;
     }
 }
-DEF_TEMPLATE(T)
-void FileLoader<T>::head(void) const
-{
-    print(5);
-}
 
-DEF_TEMPLATE(T)
-long FileLoader<T>::getColumn(void) const
-{
-    return column;
-}
 
 END_NAMESPACE_SCRIPTING

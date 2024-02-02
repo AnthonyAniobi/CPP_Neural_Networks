@@ -1,5 +1,5 @@
-#ifndef _DATATYPE_
-#define _DATATYPE_
+#ifndef _LIB_CONFIG_
+#define _LIB_CONFIG_
 // imports
 #include <vector>
 

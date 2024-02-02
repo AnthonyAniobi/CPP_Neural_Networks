@@ -1,6 +1,4 @@
 #include "net.hpp"
-#include <cassert>
-#include <cmath>
 
 Net::Net(const std::vector<unsigned> &typology)
 {
@@ -8,7 +6,7 @@ Net::Net(const std::vector<unsigned> &typology)
     for (unsigned layerNum = 0; layerNum < numLayers; ++layerNum)
     {
         // create a new layer
-        m_layers.push_back(Layer());
+        m_layers.push_back(Layer(Neuron)());
         // get the number of outputs of the next layer
         unsigned numOutputs = layerNum == (numLayers - 1) ? 0 : typology[layerNum + 1];
 
@@ -25,6 +23,7 @@ Net::Net(const std::vector<unsigned> &typology)
 
 void Net::feedForward(const std::vector<double> &inputVals)
 {
+    std::cout << "input Size: " << inputVals.size() << ", m_layers size: " << m_layers[0].size() << std::endl;
     assert(inputVals.size() == (m_layers[0].size() - 1));
 
     // assign the input values into the input layer ie. The first layer
@@ -40,7 +39,7 @@ void Net::feedForward(const std::vector<double> &inputVals)
     for (unsigned layerNum = 1; layerNum < m_layers.size(); ++layerNum)
     {
         // get a reference to the previous layer
-        Layer &prevLayer = m_layers[layerNum - 1];
+        Layer(Neuron) &prevLayer = m_layers[layerNum - 1];
         // loop through each neuron in each layer except the bias neuron
         for (unsigned neuron = 0; neuron < m_layers[layerNum].size() - 1; ++neuron)
         {
@@ -52,7 +51,7 @@ void Net::feedForward(const std::vector<double> &inputVals)
 void Net::backProp(const std::vector<double> &targetVals)
 {
     // calculate the overall erro on the output layer
-    Layer &outputLayer = m_layers.back();
+    Layer(Neuron) &outputLayer = m_layers.back();
     //              1
     // rms = sqrt(  - * sum (target - actual)^2 )
     //              n
@@ -80,8 +79,8 @@ void Net::backProp(const std::vector<double> &targetVals)
     for (unsigned hiddenNum = m_layers.size() - 2; hiddenNum > 0; --hiddenNum)
     {
         // get reference to the hidden layer and the layer before that (when coming from the back)
-        Layer &hiddenLayer = m_layers[hiddenNum];
-        Layer &prevLayer = m_layers[hiddenNum + 1];
+        Layer(Neuron) &hiddenLayer = m_layers[hiddenNum];
+        Layer(Neuron) &prevLayer = m_layers[hiddenNum + 1];
         // calculate hidden gradients for each neuron except the bias
         for (unsigned i = 0; i < hiddenLayer.size() - 1; ++i)
         {
@@ -93,8 +92,8 @@ void Net::backProp(const std::vector<double> &targetVals)
     for (unsigned layerNum = m_layers.size() - 1; layerNum > 0; --layerNum)
     {
         // get reference to the layer and the layer after that (when moving forward)
-        Layer &layer = m_layers[layerNum];
-        Layer &prevLayer = m_layers[layerNum - 1];
+        Layer(Neuron) &layer = m_layers[layerNum];
+        Layer(Neuron) &prevLayer = m_layers[layerNum - 1];
 
         // update the value on each node except the bias
         for (unsigned i = 0; i < layer.size(); ++i)
@@ -107,7 +106,7 @@ void Net::backProp(const std::vector<double> &targetVals)
 void Net::getResults(std::vector<double> resultVals) const
 {
     resultVals.clear();
-    const Layer &lastLayer = m_layers.back();
+    const Layer(Neuron) &lastLayer = m_layers.back();
     for (unsigned i = 0; i < lastLayer.size() - 1; ++i)
     {
         resultVals.push_back(lastLayer[i].getOutputVal());

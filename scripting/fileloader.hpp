@@ -7,7 +7,7 @@
 #include <sstream>
 #include <cassert>
 #include <type_traits>
-#include "datatype.hpp"
+#include "../libconfig.hpp"
 
 #define LayerString Layer(std::string)
 
@@ -18,6 +18,7 @@ class FileLoader
 {
 private:
     std::vector<Layer(T)> data;
+    std::vector<T> result;
     std::vector<LayerString> preview;
     T convertString(std::stringstream &input);
     T defaultValue(void) const;
@@ -27,9 +28,11 @@ private:
 public:
     FileLoader(const char *path); //, FileType fileType = FileType.csv);
     void print(const int length) const;
-    void head(void) const;
-    long getColumn(void) const;
-    std::vector<Layer(T)> loadData(unsigned long startIndex = 1);
+    void head(void) const { print(5); };
+    long getColumn(void) const { return column; };
+    void loadData(unsigned long startIndex = 1, unsigned long resultIndex = -1) const;
+    std::vector<T> getResult(void) { return result; }
+    std::vector<Layer(T)> getData(void) { return data; }
 };
 
 END_NAMESPACE_SCRIPTING

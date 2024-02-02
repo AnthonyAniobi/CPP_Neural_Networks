@@ -1,7 +1,11 @@
 #ifndef _NET_
 #define _NET_
 #include <vector>
+#include <cassert>
+#include <cmath>
 #include "neuron.cpp"
+#include "../libconfig.hpp"
+
 class Net
 {
 public:
@@ -11,7 +15,7 @@ public:
     void getResults(std::vector<double> resultVals) const;
 
 private:
-    std::vector<Layer> m_layers; // m_layers[layer][neurons]
+    std::vector<Layer(Neuron)> m_layers; // m_layers[layer][neurons]
     double m_error;
     double m_recentAverageError;
     double m_recentAverageSmoothingFactor;
